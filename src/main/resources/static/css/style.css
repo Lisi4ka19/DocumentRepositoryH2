@@ -1,0 +1,14 @@
+.color-text-author {
+    background-color: #ffe; /* Цвет фона */
+    color: #930; /* Цвет текста */
+}
+
+.color-text-user {
+    background-color: LightCyan; /* Цвет фона */
+    color: DodgerBlue; /* Цвет текста */
+}
+
+.color-text-error{
+    color: FireBrick;
+    font-size: small;
+}

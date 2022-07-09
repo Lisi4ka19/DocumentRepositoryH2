@@ -13,8 +13,8 @@
 
 <body>
 	<!-- create navigation bar ( header) -->
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
+<!--	<nav class="navbar navbar-inverse navbar-fixed-top">-->
+<!--		<div class="container">-->
 <!--			<div class="navbar-header">-->
 <!--				<button type="button" class="navbar-toggle collapsed"-->
 <!--					data-toggle="collapse" data-target="#navbar" aria-expanded="false"-->
@@ -32,50 +32,30 @@
 <!--				</ul>-->
 <!--			</div>-->
 
-			<div class="row">
-				<div class="col-md-6">
-					<nav aria-label="breadcrumb">
-						<ol class="breadcrumb">
-							<li class="breadcrumb-item"><a href="/">Home</a></li>
-							<li class="breadcrumb-item"><a href="/allFilms">List of films</a></li>
-						</ol>
-					</nav>
-				</div>
-				<div class="col-md-8 right-col d-flex justify-content-end">
-<!--					Logged in: &nbsp; <label class="color-text-user" th:text="${username}"/>-->
-<!--					&nbsp;| &nbsp; <a href="/logout">Logout</a>-->
-					<li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>-->
-				</div>
-			</div>
-
-		</div>
-	</nav>
-
-	<br>
-	<br>
-	<br>
-	<br>
-	<div class="container">
-		<div class="alert alert-success">
-			<strong>Success!</strong> Login Successful.
-		</div>
-	</div>
-	<input type="hidden" th:name="${_csrf.parameterName}"
-		th:value="${_csrf.token}" />
-
-
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col text-center">
-				<form style="max-width: 500px;">
+				<form style="max-width: 700px;">
+					<div class="row">
+						<div class="col-md-6">
+							<nav aria-label="breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="/">Home</a></li>
+									<li class="breadcrumb-item"><a href="/documentList">List of documents</a></li>
+								</ol>
+							</nav>
+						</div>
+						<div class="col-md-6 right-col d-flex justify-content-end">
+							Logged in: &nbsp; <label class="color-text-user" th:text="${currentUser}"/>
+							&nbsp;| &nbsp; <a href="/logout">Logout</a>
+<!--							<li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>-->
+<!--							&ndash;&gt;-->
+						</div>
+					</div>
 
-					<!--                <div>Logged in: &nbsp; <label class="color-text-user" th:text="${username}"/>-->
-					<!--                    &nbsp;| &nbsp; <a href="/logout">Logout</a></div>-->
-					<br>
-					<br>
 					<h2>Document catalog</h2>
 					<br><br>
-					<button type="button" class="btn btn-info" onclick="window.location.href='allDocuments'">Catalog</button>
+					<button type="button" class="btn btn-info" onclick="window.location.href='documentList'">Catalog</button>
 
 					<br><br>
 					<button type="button" class="btn btn-primary" onclick="window.location.href='addDocument'">Add new document</button>
@@ -85,6 +65,43 @@
 			</div>
 		</div>
 	</div>
+<!--		</div>-->
+<!--	</nav>-->
+
+	<br>
+	<br>
+	<br>
+	<br>
+<!--	<div class="container">-->
+<!--		<div class="alert alert-success">-->
+<!--			<strong>Success!</strong> Login Successful.-->
+<!--		</div>-->
+<!--	</div>-->
+<!--	<input type="hidden" th:name="${_csrf.parameterName}"-->
+<!--		th:value="${_csrf.token}" />-->
+
+
+<!--	<div class="container">-->
+<!--		<div class="row justify-content-center">-->
+<!--			<div class="col text-center">-->
+<!--				<form style="max-width: 500px;">-->
+
+<!--&lt;!&ndash;					                <div>Logged in: &nbsp; <label class="color-text-user" th:text="${currentUser}"/>&ndash;&gt;-->
+<!--&lt;!&ndash;					                    &nbsp;| &nbsp; <a href="/logout">Logout</a></div>&ndash;&gt;-->
+<!--&lt;!&ndash;					<br>&ndash;&gt;-->
+<!--&lt;!&ndash;					<br>&ndash;&gt;-->
+<!--					<h2>Document catalog</h2>-->
+<!--					<br><br>-->
+<!--					<button type="button" class="btn btn-info" onclick="window.location.href='allDocuments'">Catalog</button>-->
+
+<!--					<br><br>-->
+<!--					<button type="button" class="btn btn-primary" onclick="window.location.href='addDocument'">Add new document</button>-->
+<!--					<br><br>-->
+
+<!--				</form>-->
+<!--			</div>-->
+<!--		</div>-->
+<!--	</div>-->
 
 
 </body>

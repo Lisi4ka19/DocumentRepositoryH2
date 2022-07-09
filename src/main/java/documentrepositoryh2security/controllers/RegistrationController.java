@@ -1,4 +1,4 @@
-package documentrepositoryh2security.web;
+package documentrepositoryh2security.controllers;
 
 import documentrepositoryh2security.dto.UserRegistrationDto;
 import documentrepositoryh2security.service.UserService;
@@ -18,15 +18,14 @@ public class RegistrationController {
 	@Autowired
 	private UserService userService;
 
-//	public RegistrationController(UserService userService) {
-//		super();
-//		this.userService = userService;
-//	}
 
 	@ModelAttribute("user")
 	public UserRegistrationDto userRegistrationDto() {
 		return new UserRegistrationDto();
 	}
+
+
+
 
 	@GetMapping
 	public String showRegistrationForm(Model model) {

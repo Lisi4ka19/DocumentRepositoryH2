@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
-	User save(UserRegistrationDto registrationDto);
+	User setEnable(String userName);
+
+	User create(UserRegistrationDto registrationDto);
 
 	List<User> getAll();
 

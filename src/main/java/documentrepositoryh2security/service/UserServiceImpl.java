@@ -30,11 +30,23 @@ public class UserServiceImpl implements UserService {
 		this.userRepository = userRepository;
 	}
 
+
 	@Override
-	public User save(UserRegistrationDto registrationDto) {
+	public User setEnable(String userName) {
+
+		User user = userRepository.findByName(userName);
+
+		user.setEnable(true);
+		userRepository.save(user);
+
+		return null;
+	}
+
+	@Override
+	public User create(UserRegistrationDto registrationDto) {
 
 		User user = new User(registrationDto.getName(), registrationDto.getEmail(),
-				passwordEncoder.encode(registrationDto.getPassword()), Arrays.asList(new Role("ROLE_USER")));
+				passwordEncoder.encode(registrationDto.getPassword()),false, Arrays.asList(new Role("ROLE_USER")));
 
 		return userRepository.save(user);
 	}

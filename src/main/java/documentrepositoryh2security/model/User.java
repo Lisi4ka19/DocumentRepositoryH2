@@ -19,9 +19,14 @@ public class User {
 	@Column(name = "user_name")
 	private String name;
 
+	@Column(name = "email")
 	private String email;
 
+	@Column(name = "password")
 	private String password;
+
+	@Column(name = "enable")
+	private boolean enable;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
@@ -31,11 +36,12 @@ public class User {
 
 	}
 
-	public User(String name, String email, String password, Collection<Role> roles) {
+	public User(String name, String email, String password, boolean enable, Collection<Role> roles) {
 
 		this.name = name;
 		this.email = email;
 		this.password = password;
+		this.enable = enable;
 		this.roles = roles;
 	}
 
@@ -77,6 +83,14 @@ public class User {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isEnable() {
+		return enable;
+	}
+
+	public void setEnable(boolean enable) {
+		this.enable = enable;
 	}
 
 	@Override

@@ -14,10 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -43,7 +40,7 @@ public class HomeController {
 	UserService userService;
 
 	private User currentUser;
-
+	private SortType sortType = SortType.IdAsc;
 
 	@GetMapping("/login")
 	public String login() {
@@ -121,7 +118,7 @@ public class HomeController {
 		model.addAttribute("currentUser", currentUser.getName());
 		model.addAttribute("document", document);
 
-		String rootPath = System.getProperty("user.dir") + "\\files\\";
+		String rootPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\";
 		File dirFile =new File(rootPath);
 
 		if (!dirFile.exists()){
@@ -154,22 +151,45 @@ public class HomeController {
 	}
 
 	@GetMapping("/documentList")
-	public String getDocumentList(Model model, @PageableDefault(sort={"id"}, direction = Sort.Direction.ASC) Pageable pageable){
+	public String getDocumentList(Model model, Pageable pageable){
 
-		Page<Document> page = documentService.getAllDocument(pageable);
+//		Page<Document> page = documentService.getAllDocument(pageable);
+		Page<Document> page = getPageBySort(pageable);
 		PagesInfo pagesInfo = new PagesInfo(page);
 
 		model.addAttribute("allDocuments", page.getContent());
 
 		model.addAttribute("itemPage", pagesInfo.getPageItemsList());
-		model.addAttribute("size", page.getSize());
+		if(page.getSize()!=3&&page.getSize()!=5&&page.getSize()!=10) {
+			model.addAttribute("size", 10);
+		}
+		else {
+			model.addAttribute("size", page.getSize());
+		}
 		model.addAttribute("currentUser", currentUser.getName());
 
 		return "document-list";
 
 	}
 
+	@GetMapping("/documentList/sort/{sortTypeS}/{size}")
+	public String getDocumentListBySort(@PathVariable String sortTypeS, @PathVariable String size){
+
+		sortType = Enum.valueOf(SortType.class, sortTypeS);
+
+		return "redirect:/documentList" + "?size=" + size;
+	}
+
+
+
+	@RequestMapping("/previewPDF")
+	public String previewPDF(String fileName,Model model) {
+		model.addAttribute("fileName", fileName);
+		return "preview-pdf";
+	}
+
 	private String getFileExtension(String fileName) {
+
 
 		// если в имени файла есть точка и она не является первым символом в названии файла
 		if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
@@ -177,6 +197,46 @@ public class HomeController {
 			return fileName.substring(fileName.lastIndexOf(".")+1);
 			// в противном случае возвращаем заглушку, то есть расширение не найдено
 		else return "";
+	}
+
+	private Page getPageBySort(Pageable pageable){
+
+		Page page = null;
+
+		switch (sortType){
+			case IdAsc:
+				page = documentService.getAllDocumentByOrderByIdAsc(pageable);
+				break;
+			case IdDesc:
+				page = documentService.getAllDocumentByOrderByIdDesc(pageable);
+				break;
+			case DateAsc:
+				page = documentService.getAllDocumentByOrderByDateAsc(pageable);
+				break;
+			case DateDesc:
+				page = documentService.getAllDocumentByOrderByDateDesc(pageable);
+				break;
+			case NameAsc:
+				page = documentService.getAllDocumentByOrderByNameAsc(pageable);
+				break;
+			case NameDesc:
+				page = documentService.getAllDocumentByOrderByNameDesc(pageable);
+				break;
+			case UserAsc:
+				page = documentService.getAllDocumentByOrderByUserAsc(pageable);
+				break;
+			case UserDesc:
+				page = documentService.getAllDocumentByOrderByUserDesc(pageable);
+				break;
+			case AnnotationAsc:
+				page = documentService.getAllDocumentByOrderAnnotationAsc(pageable);
+				break;
+			case AnnotationDesc:
+				page = documentService.getAllDocumentByOrderByAnnotationDesc(pageable);
+				break;
+		}
+
+		return page;
 	}
 
 }

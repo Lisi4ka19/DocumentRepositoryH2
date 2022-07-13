@@ -47,30 +47,51 @@
         <table class="table table-bordered table-sm table-striped">
             <thead class="thead-inverse">
             <tr>
-                <th>Name</th>
-                <th>Date</th>
-                <th>User</th>
-                <th>Annotation</th>
-
+                <th class="dropdown" style="width: 8%">Id
+                    <a th:href="@{'/documentList/sort/{sortTypeS}/{size}' (sortTypeS = 'IdAsc', size=${size})}"><img src = "/img/chevron-circle-up-solid.svg" width="20" height="20"/></a>
+                    <a th:href="@{'/documentList/sort/{sortTypeS}/{size}' (sortTypeS = 'IdDesc', size=${size})}"><img src = "/img/chevron-circle-down-solid.svg" width="20" height="20"/></a>
+                </th>
+                <th class="dropdown" style="width: 20%">Name
+                    <a th:href="@{'/documentList/sort/{sortTypeS}/{size}' (sortTypeS = 'NameAsc', size=${size})}"><img src = "/img/chevron-circle-up-solid.svg" width="20" height="20"/></a>
+                    <a th:href="@{'/documentList/sort/{sortTypeS}/{size}' (sortTypeS = 'NameDesc', size=${size})}"><img src = "/img/chevron-circle-down-solid.svg" width="20" height="20"/></a>
+                </th>
+                <th class="dropdown" style="width: 10%">Date
+                    <a th:href="@{'/documentList/sort/{sortTypeS}/{size}' (sortTypeS = 'DateAsc', size=${size})}"><img src = "/img/chevron-circle-up-solid.svg" width="20" height="20"/></a>
+                    <a th:href="@{'/documentList/sort/{sortTypeS}/{size}' (sortTypeS = 'DateDesc', size=${size})}"><img src = "/img/chevron-circle-down-solid.svg" width="20" height="20"/></a>
+                </th>
+                <th class="dropdown" style="width: 20%">User
+                    <a th:href="@{'/documentList/sort/{sortTypeS}/{size}' (sortTypeS = 'UserAsc', size=${size})}"><img src = "/img/chevron-circle-up-solid.svg" width="20" height="20"/></a>
+                    <a th:href="@{'/documentList/sort/{sortTypeS}/{size}' (sortTypeS = 'UserDesc', size=${size})}"><img src = "/img/chevron-circle-down-solid.svg" width="20" height="20"/></a>
+                </th>
+                <th class="dropdown" style="width: 30%">Annotation
+                    <a th:href="@{'/documentList/sort/{sortTypeS}/{size}' (sortTypeS = 'AnnotationAsc', size=${size})}"><img src = "/img/chevron-circle-up-solid.svg" width="20" height="20"/></a>
+                    <a th:href="@{'/documentList/sort/{sortTypeS}/{size}' (sortTypeS = 'AnnotationDesc', size=${size})}"><img src = "/img/chevron-circle-down-solid.svg" width="20" height="20"/></a>
+                </th>
+                <th class="dropdown" style="width: 5%">Operation</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="document: ${allDocuments}">
 
-
+                <td th:text="${document.id}"></td>
                 <td th:text="${document.name}"></td>
-                <td th:text="${document.date}"></td>
+                <td th:text="${#dates.format(document.date, 'd MMM yyyy')}" style="text-align: center"></td>
                 <td th:text="${document.user}"></td>
                 <td th:text="${document.annotation}"></td>
 
-<!--                <td style="text-align: center">-->
+                <td style="text-align: center">
 
 <!--                    <a th:href="@{/updateFilm(id=${film.id})}"> <i class="fa fa-edit"></i></a>-->
 
 <!--                    <i class="fa fa-trash" th:if="${#request.isUserInRole('all')}" th:data-href="'/deleteFilm?id=' + ${film.id}" data-bs-toggle="modal" data-bs-target="#confirm-delete"></i>-->
+<!--                    <i class="fa-solid fa-magnifying-glass"></i>-->
 
 
-<!--                </td>-->
+                    <img src = "/img/magnifying-glass-solid.svg" width="20" height="20"
+                         data-bs-toggle="modal" data-bs-target= "#myModal"
+                         th:attr="onclick='javascript:getPreview(\''+${document.fileName}+'\')'"/>
+
+                </td>
             </tr>
             </tbody>
         </table>
@@ -112,9 +133,26 @@
 
 </div>
 
-
+<div class="modal fade bs-example-modal-lg" id="myModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class = "modal-title-x"> Тестовый документ </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body-x">
+<!--                Это всего лишь содержание теста-->
+<!--                <iframe style="width: 790px;height:540px" th:src="'../files/'+ ${fileName}"></iframe>-->
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="..\js\getPreview.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 </body>
 

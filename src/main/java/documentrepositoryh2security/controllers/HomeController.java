@@ -118,7 +118,7 @@ public class HomeController {
 		model.addAttribute("currentUser", currentUser.getName());
 		model.addAttribute("document", document);
 
-		String rootPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\";
+		String rootPath = System.getProperty("user.dir") + "\\files\\";
 		File dirFile =new File(rootPath);
 
 		if (!dirFile.exists()){
@@ -184,6 +184,9 @@ public class HomeController {
 
 	@RequestMapping("/previewPDF")
 	public String previewPDF(String fileName,Model model) {
+//		String path = System.getProperty("user.dir") + "\\files\\";
+
+//		model.addAttribute("fileName", path + fileName);
 		model.addAttribute("fileName", fileName);
 		return "preview-pdf";
 	}

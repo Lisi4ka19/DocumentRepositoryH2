@@ -1,15 +1,15 @@
-package documentrepositoryh2security.model;
+package documentrepositoryh2security.dto;
 
+import documentrepositoryh2security.model.User;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
+@Table(name = "DocumentWithAccessDto")
 @Entity
-@Table(name="documents")
-public class Document {
+public class DocumentWithAccessDto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,38 +35,20 @@ public class Document {
     @Column(name="fileName")
     private String fileName;
 
-////    @Transient
-//    private boolean viewing;
-//
-////    @Transient
-//    private boolean reading;
-//
-////    @Transient
-//    private boolean writing;
-//
-////    @Transient
-//    private boolean deleting;
+    //    @Transient
+    private boolean viewing;
+
+    //    @Transient
+    private boolean reading;
+
+    //    @Transient
+    private boolean writing;
+
+    //    @Transient
+    private boolean deleting;
 
 
-    public Document(int id, String name, Date date, User user, String annotation, String fileName) {
-        this.id = id;
-        this.name = name;
-        this.date = date;
-        this.user = user;
-        this.annotation = annotation;
-        this.fileName = fileName;
-    }
-
-    public Document() {
-
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public DocumentWithAccessDto() {
     }
 
     public int getId() {
@@ -109,4 +91,43 @@ public class Document {
         this.annotation = annotation;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public boolean isViewing() {
+        return viewing;
+    }
+
+    public void setViewing(boolean viewing) {
+        this.viewing = viewing;
+    }
+
+    public boolean isReading() {
+        return reading;
+    }
+
+    public void setReading(boolean reading) {
+        this.reading = reading;
+    }
+
+    public boolean isWriting() {
+        return writing;
+    }
+
+    public void setWriting(boolean writing) {
+        this.writing = writing;
+    }
+
+    public boolean isDeleting() {
+        return deleting;
+    }
+
+    public void setDeleting(boolean deleting) {
+        this.deleting = deleting;
+    }
 }

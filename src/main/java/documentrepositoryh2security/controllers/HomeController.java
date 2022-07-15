@@ -2,13 +2,15 @@ package documentrepositoryh2security.controllers;
 
 import documentrepositoryh2security.model.Document;
 import documentrepositoryh2security.model.User;
+import documentrepositoryh2security.service.DocumentAccessService;
+
 import documentrepositoryh2security.service.DocumentService;
+import documentrepositoryh2security.service.DocumentWithAccessService;
 import documentrepositoryh2security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -16,17 +18,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import java.util.Base64;
 import java.util.Date;
 
@@ -38,6 +34,12 @@ public class HomeController {
 
 	@Autowired
 	UserService userService;
+
+	@Autowired
+	DocumentAccessService documentAccessService;
+
+	@Autowired
+	DocumentWithAccessService documentWithAccessService;
 
 	private User currentUser;
 	private SortType sortType = SortType.IdAsc;
@@ -88,7 +90,17 @@ public class HomeController {
 							   @Valid @ModelAttribute("document") Document document,
 							    BindingResult bindingResult) {
 
-		document.setUser(currentUser);
+		boolean isNewDocument = true;
+
+
+
+		if(document.getId()!=0){
+			isNewDocument = false;
+			document.setUser(documentService.getDocument(document.getId()).getUser());
+		}
+		else {
+			document.setUser(currentUser);
+		}
 
 		if (bindingResult.hasErrors()) {
 
@@ -99,7 +111,7 @@ public class HomeController {
 
 			return "document-form";
 		}
-		if(file.getSize() == 0){
+		if(document.getId() == 0 && file.getSize() == 0){
 			document.setDate(new Date());
 			document.setUser(currentUser);
 			model.addAttribute("document", document);
@@ -118,34 +130,41 @@ public class HomeController {
 		model.addAttribute("currentUser", currentUser.getName());
 		model.addAttribute("document", document);
 
-		String rootPath = System.getProperty("user.dir") + "\\files\\";
-		File dirFile =new File(rootPath);
+		if(file.getSize() != 0) {
+			String rootPath = System.getProperty("user.dir") + "\\files\\";
+			File dirFile = new File(rootPath);
 
-		if (!dirFile.exists()){
-			dirFile.mkdir();
+			if (!dirFile.exists()) {
+				dirFile.mkdir();
+			}
+
+			String fileName = String.valueOf(document.getId()) + "." + getFileExtension(file.getOriginalFilename());
+			String path = rootPath + fileName;
+
+			System.out.println(path);
+			System.out.println(file.getOriginalFilename());
+
+			try (FileOutputStream fos = new FileOutputStream(path)) {
+
+				fos.write(file.getBytes());
+			} catch (IOException e) {
+
+				model.addAttribute("hasErrorFile", true);
+				model.addAttribute("errorFile", e.getMessage());
+				model.addAttribute("document", document);
+				model.addAttribute("currentUser", currentUser.getName());
+
+				return "document-form";
+
+
+			}
+			document.setFileName(fileName);
+			documentService.saveDocument(document);
 		}
 
-		String fileName = String.valueOf(document.getId()) + "." + getFileExtension(file.getOriginalFilename());
-		String path =  rootPath + fileName;
-
-		System.out.println(path);
-		System.out.println(file.getOriginalFilename());
-
-		try(FileOutputStream fos = new FileOutputStream(path)) {
-
-			fos.write(file.getBytes());
+		if(isNewDocument) {
+			documentAccessService.createFullAccess(document, currentUser);
 		}
-		catch (IOException e) {
-
-			model.addAttribute("hasErrorFile", true);
-			model.addAttribute("errorFile", e.getMessage());
-
-			return "document-form";
-
-
-		}
-		document.setFileName(fileName);
-		documentService.saveDocument(document);
 
 		return "redirect:/documentList";
 	}
@@ -153,8 +172,8 @@ public class HomeController {
 	@GetMapping("/documentList")
 	public String getDocumentList(Model model, Pageable pageable){
 
-//		Page<Document> page = documentService.getAllDocument(pageable);
-		Page<Document> page = getPageBySort(pageable);
+
+		Page<Document> page = getPageBySort(pageable, currentUser.getId());
 		PagesInfo pagesInfo = new PagesInfo(page);
 
 		model.addAttribute("allDocuments", page.getContent());
@@ -180,13 +199,31 @@ public class HomeController {
 		return "redirect:/documentList" + "?size=" + size;
 	}
 
+	@GetMapping("/deleteDocument")
+	public String deleteDocument(@RequestParam("id") int id, Model model) {
 
+
+		documentAccessService.deleteAllByDocument(documentService.getDocument(id));
+		documentService.deleteDocument(id);
+
+		return "redirect:/documentList";
+	}
+
+	@GetMapping("/updateDocument")
+	public String updateFilm(@RequestParam("id") int id, Model model) {
+
+
+		Document document = documentService.getDocument(id);
+		model.addAttribute("document", document);
+
+		model.addAttribute("currentUser", currentUser.getName());
+
+		return "document-form";
+	}
 
 	@RequestMapping("/previewPDF")
 	public String previewPDF(String fileName,Model model) {
-//		String path = System.getProperty("user.dir") + "\\files\\";
 
-//		model.addAttribute("fileName", path + fileName);
 		model.addAttribute("fileName", fileName);
 		return "preview-pdf";
 	}
@@ -202,40 +239,50 @@ public class HomeController {
 		else return "";
 	}
 
-	private Page getPageBySort(Pageable pageable){
+	private Page getPageBySort(Pageable pageable, Long userId){
 
 		Page page = null;
 
 		switch (sortType){
 			case IdAsc:
-				page = documentService.getAllDocumentByOrderByIdAsc(pageable);
+//				page = documentService.getAllDocumentByOrderByIdAsc(pageable, userId);
+				page = documentWithAccessService.getAllDocumentByOrderByIdAsc(pageable, userId);
 				break;
 			case IdDesc:
-				page = documentService.getAllDocumentByOrderByIdDesc(pageable);
+//				page = documentService.getAllDocumentByOrderByIdDesc(pageable, userId);
+				page = documentWithAccessService.getAllDocumentByOrderByIdDesc(pageable, userId);
 				break;
 			case DateAsc:
-				page = documentService.getAllDocumentByOrderByDateAsc(pageable);
+//				page = documentService.getAllDocumentByOrderByDateAsc(pageable);
+				page = documentWithAccessService.getAllDocumentByOrderByDateAsc(pageable, userId);
 				break;
 			case DateDesc:
-				page = documentService.getAllDocumentByOrderByDateDesc(pageable);
+//				page = documentService.getAllDocumentByOrderByDateDesc(pageable);
+				page = documentWithAccessService.getAllDocumentByOrderByDateDesc(pageable, userId);
 				break;
 			case NameAsc:
-				page = documentService.getAllDocumentByOrderByNameAsc(pageable);
+//				page = documentService.getAllDocumentByOrderByNameAsc(pageable);
+				page = documentWithAccessService.getAllDocumentByOrderByNameAsc(pageable, userId);
 				break;
 			case NameDesc:
-				page = documentService.getAllDocumentByOrderByNameDesc(pageable);
+//				page = documentService.getAllDocumentByOrderByNameDesc(pageable);
+				page = documentWithAccessService.getAllDocumentByOrderByNameDesc(pageable, userId);
 				break;
 			case UserAsc:
-				page = documentService.getAllDocumentByOrderByUserAsc(pageable);
+//				page = documentService.getAllDocumentByOrderByUserAsc(pageable);
+				page = documentWithAccessService.getAllDocumentByOrderByUserAsc(pageable, userId);
 				break;
 			case UserDesc:
-				page = documentService.getAllDocumentByOrderByUserDesc(pageable);
+//				page = documentService.getAllDocumentByOrderByUserDesc(pageable);
+				page = documentWithAccessService.getAllDocumentByOrderByUserDesc(pageable, userId);
 				break;
 			case AnnotationAsc:
-				page = documentService.getAllDocumentByOrderAnnotationAsc(pageable);
+//				page = documentService.getAllDocumentByOrderAnnotationAsc(pageable);
+				page = documentWithAccessService.getAllDocumentByOrderAnnotationAsc(pageable, userId);
 				break;
 			case AnnotationDesc:
-				page = documentService.getAllDocumentByOrderByAnnotationDesc(pageable);
+//				page = documentService.getAllDocumentByOrderByAnnotationDesc(pageable);
+				page = documentWithAccessService.getAllDocumentByOrderByAnnotationDesc(pageable, userId);
 				break;
 		}
 

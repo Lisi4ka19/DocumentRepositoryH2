@@ -16,7 +16,6 @@ public class DocumentWithAccessDto {
     @Column(name="id", updatable = false, nullable = false)
     private int id;
 
-    @Size(min=2, message = "Name - required field")
     @Column(name="name")
     private String name;
 
@@ -28,25 +27,21 @@ public class DocumentWithAccessDto {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @Size(min=2, message = "Annotation - required field")
     @Column(name="annotation")
     private String annotation;
 
-    @Column(name="fileName")
+    @Column(name = "fileName")
     private String fileName;
 
-    //    @Transient
     private boolean viewing;
 
-    //    @Transient
     private boolean reading;
 
-    //    @Transient
     private boolean writing;
 
-    //    @Transient
     private boolean deleting;
 
+    private boolean setting;
 
     public DocumentWithAccessDto() {
     }
@@ -129,5 +124,13 @@ public class DocumentWithAccessDto {
 
     public void setDeleting(boolean deleting) {
         this.deleting = deleting;
+    }
+
+    public boolean isSetting() {
+        return setting;
+    }
+
+    public void setSetting(boolean setting) {
+        this.setting = setting;
     }
 }

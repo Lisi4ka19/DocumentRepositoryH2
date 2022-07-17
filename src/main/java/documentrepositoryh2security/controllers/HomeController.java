@@ -1,6 +1,7 @@
 package documentrepositoryh2security.controllers;
 
 import documentrepositoryh2security.model.Document;
+import documentrepositoryh2security.model.DocumentsAccess;
 import documentrepositoryh2security.model.User;
 import documentrepositoryh2security.service.DocumentAccessService;
 
@@ -23,8 +24,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import java.util.Base64;
+
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class HomeController {
@@ -84,6 +86,8 @@ public class HomeController {
 
 		return "document-form";
 	}
+
+
 
 	@PostMapping("/saveDocument")
 	public String saveDocument(Model model,  @RequestParam("file") MultipartFile file,
@@ -199,6 +203,9 @@ public class HomeController {
 		return "redirect:/documentList" + "?size=" + size;
 	}
 
+
+
+
 	@GetMapping("/deleteDocument")
 	public String deleteDocument(@RequestParam("id") int id, Model model) {
 
@@ -210,7 +217,7 @@ public class HomeController {
 	}
 
 	@GetMapping("/updateDocument")
-	public String updateFilm(@RequestParam("id") int id, Model model) {
+	public String updateDocument(@RequestParam("id") int id, Model model) {
 
 
 		Document document = documentService.getDocument(id);
@@ -221,6 +228,50 @@ public class HomeController {
 		return "document-form";
 	}
 
+	@GetMapping("/updateAccess")
+	public String updateAccess(@RequestParam("id") int id, @RequestParam("documentId") int documentId,
+							   @RequestParam("user") String user, Model model) {
+
+
+		DocumentsAccess documentsAccess = documentAccessService.getDocumentsAccessById(id);
+		if(documentsAccess==null){
+			documentsAccess = new DocumentsAccess();
+			documentsAccess.setDocument(documentService.getDocument(documentId));
+			documentsAccess.setUser(userService.getUser(user));
+		}
+		model.addAttribute("documentAccess", documentsAccess);
+		model.addAttribute("documentName", documentsAccess.getDocument().getName());
+		model.addAttribute("userName", documentsAccess.getUser().getName());
+
+		model.addAttribute("currentUser", currentUser.getName());
+
+		return "view";
+	}
+
+	@GetMapping("/settingDocument")
+	public String settingDocument(@RequestParam("id") int id, Model model) {
+
+		Document document = documentService.getDocument(id);
+		model.addAttribute("document", document);
+
+		model.addAttribute("currentUser", currentUser.getName());
+
+		List<DocumentsAccess> documentsAccessList = documentAccessService.getAllUsersAccessByDocument(document);
+		model.addAttribute("allAccess", documentsAccessList);
+		model.addAttribute("documentId", document.getId());
+		model.addAttribute("documentAuthor", document.getUser());
+
+		return "access-list";
+	}
+
+	@PostMapping("/updateAccess/saveAccess")
+	public String saveDocument(Model model,   @ModelAttribute("documentsAccess") DocumentsAccess documentsAccess) {
+
+		documentAccessService.save(documentsAccess);
+
+		return "redirect:/settingDocument?id=" + documentsAccess.getDocument().getId();
+	}
+
 	@RequestMapping("/previewPDF")
 	public String previewPDF(String fileName,Model model) {
 
@@ -229,7 +280,6 @@ public class HomeController {
 	}
 
 	private String getFileExtension(String fileName) {
-
 
 		// если в имени файла есть точка и она не является первым символом в названии файла
 		if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
@@ -245,47 +295,36 @@ public class HomeController {
 
 		switch (sortType){
 			case IdAsc:
-//				page = documentService.getAllDocumentByOrderByIdAsc(pageable, userId);
 				page = documentWithAccessService.getAllDocumentByOrderByIdAsc(pageable, userId);
 				break;
 			case IdDesc:
-//				page = documentService.getAllDocumentByOrderByIdDesc(pageable, userId);
 				page = documentWithAccessService.getAllDocumentByOrderByIdDesc(pageable, userId);
 				break;
 			case DateAsc:
-//				page = documentService.getAllDocumentByOrderByDateAsc(pageable);
 				page = documentWithAccessService.getAllDocumentByOrderByDateAsc(pageable, userId);
 				break;
 			case DateDesc:
-//				page = documentService.getAllDocumentByOrderByDateDesc(pageable);
 				page = documentWithAccessService.getAllDocumentByOrderByDateDesc(pageable, userId);
 				break;
 			case NameAsc:
-//				page = documentService.getAllDocumentByOrderByNameAsc(pageable);
 				page = documentWithAccessService.getAllDocumentByOrderByNameAsc(pageable, userId);
 				break;
 			case NameDesc:
-//				page = documentService.getAllDocumentByOrderByNameDesc(pageable);
 				page = documentWithAccessService.getAllDocumentByOrderByNameDesc(pageable, userId);
 				break;
 			case UserAsc:
-//				page = documentService.getAllDocumentByOrderByUserAsc(pageable);
 				page = documentWithAccessService.getAllDocumentByOrderByUserAsc(pageable, userId);
 				break;
 			case UserDesc:
-//				page = documentService.getAllDocumentByOrderByUserDesc(pageable);
 				page = documentWithAccessService.getAllDocumentByOrderByUserDesc(pageable, userId);
 				break;
 			case AnnotationAsc:
-//				page = documentService.getAllDocumentByOrderAnnotationAsc(pageable);
 				page = documentWithAccessService.getAllDocumentByOrderAnnotationAsc(pageable, userId);
 				break;
 			case AnnotationDesc:
-//				page = documentService.getAllDocumentByOrderByAnnotationDesc(pageable);
 				page = documentWithAccessService.getAllDocumentByOrderByAnnotationDesc(pageable, userId);
 				break;
 		}
-
 		return page;
 	}
 

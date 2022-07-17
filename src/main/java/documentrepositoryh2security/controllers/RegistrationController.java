@@ -10,15 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Random;
-
 
 @Controller
 public class RegistrationController {
 
 	private String userName;
 	private boolean success;
-//	private String code;
+
 
 	@Autowired
 	private UserService userService;
@@ -70,6 +68,7 @@ public class RegistrationController {
 
 			User user = userService.getUser(verificationToken.getUserName());
 			user.setEnable(true);
+			userService.save(user);
 			success = true;
 			return "redirect:/verification?success";
 		}

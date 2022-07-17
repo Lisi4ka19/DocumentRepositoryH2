@@ -16,61 +16,6 @@ public class DocumentServiceImp implements DocumentService{
    @Autowired
     DocumentRepository documentRepository;
 
-//    @Override
-//    public Page<Document> getAllDocument(Pageable pageable) {
-//        return documentRepository.findAll(pageable);
-//    }
-//
-//    @Override
-//    public Page<Document> getAllDocumentByOrderByDateAsc(Pageable pageable) {
-//        return documentRepository.findAllByOrderByDateAsc(pageable);
-//    }
-//
-//    @Override
-//    public Page<Document> getAllDocumentByOrderByDateDesc(Pageable pageable) {
-//        return documentRepository.findAllByOrderByDateDesc(pageable);
-//    }
-
-//    @Override
-//    public Page<Document> getAllDocumentByOrderByIdAsc(Pageable pageable, Long userId) {
-//        return documentRepository.findAllByOrderByIdAsc(pageable, userId);
-//    }
-//
-//    @Override
-//    public Page<Document> getAllDocumentByOrderByIdDesc(Pageable pageable, Long userId) {
-//        return documentRepository.findAllByOrderByIdDesc(pageable, userId);
-//    }
-//
-//    @Override
-//    public Page<Document> getAllDocumentByOrderByNameAsc(Pageable pageable) {
-//        return documentRepository.findAllByOrderByNameAsc(pageable);
-//    }
-//
-//    @Override
-//    public Page<Document> getAllDocumentByOrderByNameDesc(Pageable pageable) {
-//        return documentRepository.findAllByOrderByNameDesc(pageable);
-//    }
-//
-//    @Override
-//    public Page<Document> getAllDocumentByOrderByUserAsc(Pageable pageable) {
-//        return documentRepository.findAllByOrderByUserAsc(pageable);
-//    }
-//
-//    @Override
-//    public Page<Document> getAllDocumentByOrderByUserDesc(Pageable pageable) {
-//        return documentRepository.findAllByOrderByUserDesc(pageable);
-//    }
-//
-//    @Override
-//    public Page<Document> getAllDocumentByOrderAnnotationAsc(Pageable pageable) {
-//        return documentRepository.findAllByOrderByAnnotationAsc(pageable);
-//    }
-//
-//    @Override
-//    public Page<Document> getAllDocumentByOrderByAnnotationDesc(Pageable pageable) {
-//        return documentRepository.findAllByOrderByAnnotationDesc(pageable);
-//    }
-
     @Transactional
     @Override
     public void saveDocument(Document document) {

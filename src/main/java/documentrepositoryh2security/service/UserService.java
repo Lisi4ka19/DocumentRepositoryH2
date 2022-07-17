@@ -15,4 +15,8 @@ public interface UserService extends UserDetailsService {
 	List<User> getAll();
 
 	User getUser(String name);
+
+	void save(User user);
+
+	List<User> getAllByEnable();
 }

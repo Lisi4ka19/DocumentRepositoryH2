@@ -7,6 +7,10 @@
     background-color: LightCyan; /* Цвет фона */
     color: DodgerBlue; /* Цвет текста */
 }
+.color-text-label {
+    background-color: LightGrey; /* Цвет фона */
+    font-weight: bold; /* жирный шрифт */
+}
 
 .color-text-error{
     color: FireBrick;

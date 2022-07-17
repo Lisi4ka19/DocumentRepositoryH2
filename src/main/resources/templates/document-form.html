@@ -57,11 +57,11 @@
                 <br>
 
                 <input type="file" id="file-selector" name="file">
-<!--                <p id="status"></p>-->
+
 
                 <br>
                 <div class="color-text-error" th:if="${hasErrorFile==true}" th:text="${errorFile}"></div>
-<!--                <label  th:text="${errorFile}" th:if="${hasErrorFile==true}"></label>-->
+
                 <br>
                 <input type="hidden" th:field="*{fileName}"/><br><br>
                 Created by:<label class="color-text-author" th:text="${document.user}" ></label>

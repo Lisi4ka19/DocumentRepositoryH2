@@ -70,7 +70,7 @@
                     <a th:href="@{'/documentList/sort/{sortTypeS}/{size}' (sortTypeS = 'AnnotationAsc', size=${size})}"><img src = "/img/chevron-circle-up-solid.svg" width="20" height="20"/></a>
                     <a th:href="@{'/documentList/sort/{sortTypeS}/{size}' (sortTypeS = 'AnnotationDesc', size=${size})}"><img src = "/img/chevron-circle-down-solid.svg" width="20" height="20"/></a>
                 </th>
-                <th class="dropdown" style="width: 5%">Operation</th>
+                <th class="dropdown" style="width: 8%">Operation</th>
             </tr>
             </thead>
             <tbody>
@@ -87,11 +87,11 @@
 
                     <img src = "/img/magnifying-glass-solid.svg" width="20" height="20"
                          data-bs-toggle="modal" data-bs-target= "#myModal"
-                         th:attr="onclick='javascript:getPreview(\''+${document.fileName}+'\')'"/>
+                         th:attr="onclick='javascript:getPreview(\''+${document.fileName}+'\')'" th:if="${document.viewing}"/>
 
                     <a th:href="@{/updateDocument(id=${document.id})}"> <img src = "/img/edit-solid.svg" width="20" height="20" th:if="${document.writing}"/></a>
                     <img src = "/img/trash-can-solid.svg" width="20" height="20" th:if="${document.deleting}" th:data-href="'/deleteDocument?id=' + ${document.id}" data-bs-toggle="modal" data-bs-target="#confirm-delete"/>
-
+                    <a th:href="@{/settingDocument(id=${document.id})}"> <img src = "/img/gear-solid.svg" width="20" height="20" th:if="${document.setting}"/></a>
                 </td>
             </tr>
             </tbody>

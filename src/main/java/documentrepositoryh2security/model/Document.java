@@ -3,7 +3,6 @@ package documentrepositoryh2security.model;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
@@ -34,18 +33,6 @@ public class Document {
 
     @Column(name="fileName")
     private String fileName;
-
-////    @Transient
-//    private boolean viewing;
-//
-////    @Transient
-//    private boolean reading;
-//
-////    @Transient
-//    private boolean writing;
-//
-////    @Transient
-//    private boolean deleting;
 
 
     public Document(int id, String name, Date date, User user, String annotation, String fileName) {
@@ -109,4 +96,10 @@ public class Document {
         this.annotation = annotation;
     }
 
+    @Override
+    public String toString() {
+        return "Document{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

@@ -31,16 +31,20 @@ public class DocumentsAccess {
     @Column(name="deleting")
     private boolean deleting;
 
+    @Column(name="setting")
+    private boolean setting;
+
     public DocumentsAccess() {
     }
 
-    public DocumentsAccess(Document document, User user, boolean viewing, boolean reading, boolean writing, boolean deleting) {
+    public DocumentsAccess(Document document, User user, boolean viewing, boolean reading, boolean writing, boolean deleting, boolean setting) {
         this.document = document;
         this.user = user;
         this.viewing = viewing;
         this.reading = reading;
         this.writing = writing;
         this.deleting = deleting;
+        this.setting = setting;
     }
 
     public int getId() {
@@ -98,4 +102,13 @@ public class DocumentsAccess {
     public void setDeleting(boolean deleting) {
         this.deleting = deleting;
     }
+
+    public boolean isSetting() {
+        return setting;
+    }
+
+    public void setSetting(boolean setting) {
+        this.setting = setting;
+    }
+
 }

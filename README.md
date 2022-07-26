@@ -1,6 +1,7 @@
 # Тестовое задание "Хранилище документов"
 
-[![Watch the video](https://img.youtube.com/vi/dm344kPJ95A/maxresdefault.jpg)]([https://youtu.be/T-D1KVIuvjA](https://www.youtube.com/embed/dm344kPJ95A))
+![DocumentRepository - demo](https://user-images.githubusercontent.com/63442751/181001629-bf73cb4b-79c1-46f5-8fa7-32cc3d969688.gif)
+
 
 Логика приложения: 
 1.	Регистрация пользователя, ввод кода верификации (эмуляция получения кода верификации без отправки e-mail). 

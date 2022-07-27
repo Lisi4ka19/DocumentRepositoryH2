@@ -77,6 +77,7 @@ public class HomeController {
 
 	@GetMapping("/addDocument")
 	public String addDocument(Model model) {
+		currentUser = getUser();
 
 		Document document = new Document();
 		document.setDate(new Date());
@@ -96,7 +97,7 @@ public class HomeController {
 
 		boolean isNewDocument = true;
 
-
+		currentUser = getUser();
 
 		if(document.getId()!=0){
 			isNewDocument = false;
@@ -176,6 +177,7 @@ public class HomeController {
 	@GetMapping("/documentList")
 	public String getDocumentList(Model model, Pageable pageable){
 
+		currentUser = getUser();
 
 		Page<Document> page = getPageBySort(pageable, currentUser.getId());
 		PagesInfo pagesInfo = new PagesInfo(page);
@@ -219,6 +221,7 @@ public class HomeController {
 	@GetMapping("/updateDocument")
 	public String updateDocument(@RequestParam("id") int id, Model model) {
 
+		currentUser = getUser();
 
 		Document document = documentService.getDocument(id);
 		model.addAttribute("document", document);
@@ -232,6 +235,7 @@ public class HomeController {
 	public String updateAccess(@RequestParam("id") int id, @RequestParam("documentId") int documentId,
 							   @RequestParam("user") String user, Model model) {
 
+		currentUser = getUser();
 
 		DocumentsAccess documentsAccess = documentAccessService.getDocumentsAccessById(id);
 		if(documentsAccess==null){
@@ -250,6 +254,7 @@ public class HomeController {
 
 	@GetMapping("/settingDocument")
 	public String settingDocument(@RequestParam("id") int id, Model model) {
+		currentUser = getUser();
 
 		Document document = documentService.getDocument(id);
 		model.addAttribute("document", document);

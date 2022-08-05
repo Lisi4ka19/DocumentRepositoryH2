@@ -1,10 +1,17 @@
 package documentrepositoryh2security.dto;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 public class UserRegistrationDto {
 
-
+	@Size(min = 2, message = "name must me at least 2 character")
 	private String name;
+
+	@Pattern(regexp =".+@.+\\..{2,}", message = "invalid e-mail")
 	private String email;
+
+	@Size(min = 1, message = "password must be at least 1 character")
 	private String password;
 
 	public UserRegistrationDto() {

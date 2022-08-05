@@ -1,6 +1,8 @@
 package documentrepositoryh2security.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 
 @Entity
@@ -16,6 +18,7 @@ public class User {
 
 	@Column(name = "email")
 	private String email;
+
 
 	@Column(name = "password")
 	private String password;

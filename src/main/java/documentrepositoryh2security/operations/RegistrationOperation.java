@@ -1,4 +1,4 @@
-package documentrepositoryh2security.Operations;
+package documentrepositoryh2security.operations;
 
 import java.util.Random;
 

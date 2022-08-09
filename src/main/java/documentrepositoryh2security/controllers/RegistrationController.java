@@ -1,6 +1,6 @@
 package documentrepositoryh2security.controllers;
 
-import documentrepositoryh2security.Operations.RegistrationOperation;
+import documentrepositoryh2security.operations.RegistrationOperation;
 import documentrepositoryh2security.dto.UserRegistrationDto;
 import documentrepositoryh2security.dto.VerificationToken;
 import documentrepositoryh2security.model.User;

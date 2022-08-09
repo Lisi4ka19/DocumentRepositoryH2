@@ -3,6 +3,7 @@ package documentrepositoryh2security.controllers;
 import documentrepositoryh2security.model.Document;
 import documentrepositoryh2security.model.DocumentsAccess;
 import documentrepositoryh2security.model.User;
+import documentrepositoryh2security.operations.FilesOperation;
 import documentrepositoryh2security.service.DocumentAccessService;
 
 import documentrepositoryh2security.service.DocumentService;
@@ -136,33 +137,19 @@ public class HomeController {
 		model.addAttribute("document", document);
 
 		if(file.getSize() != 0) {
-			String rootPath = System.getProperty("user.dir") + "\\files\\";
-			File dirFile = new File(rootPath);
 
-			if (!dirFile.exists()) {
-				dirFile.mkdir();
-			}
-
-			String fileName = String.valueOf(document.getId()) + "." + getFileExtension(file.getOriginalFilename());
-			String path = rootPath + fileName;
-
-			System.out.println(path);
-			System.out.println(file.getOriginalFilename());
-
-			try (FileOutputStream fos = new FileOutputStream(path)) {
-
-				fos.write(file.getBytes());
+			String fileName = "";
+			try {
+				fileName = FilesOperation.saveFile(file, document.getId());
 			} catch (IOException e) {
-
 				model.addAttribute("hasErrorFile", true);
 				model.addAttribute("errorFile", e.getMessage());
 				model.addAttribute("document", document);
 				model.addAttribute("currentUser", currentUser.getName());
 
 				return "document-form";
-
-
 			}
+
 			document.setFileName(fileName);
 			documentService.saveDocument(document);
 		}
@@ -284,15 +271,6 @@ public class HomeController {
 		return "preview-pdf";
 	}
 
-	private String getFileExtension(String fileName) {
-
-		// если в имени файла есть точка и она не является первым символом в названии файла
-		if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
-			// то вырезаем все знаки после последней точки в названии файла, то есть ХХХХХ.txt -> txt
-			return fileName.substring(fileName.lastIndexOf(".")+1);
-			// в противном случае возвращаем заглушку, то есть расширение не найдено
-		else return "";
-	}
 
 	private Page getPageBySort(Pageable pageable, Long userId){
 

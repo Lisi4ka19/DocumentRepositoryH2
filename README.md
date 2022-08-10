@@ -1,7 +1,7 @@
 # Тестовое задание "Хранилище документов"
 
 
-[![Demo](http://i.imgur.com/7YTMFQp.png)](https://youtu.be/Jn1AsXF129Q)
+[![Demo](/images/preview.jpg)](https://youtu.be/Jn1AsXF129Q "Document repository - Click to Watch!")
 
 Логика приложения:
 
